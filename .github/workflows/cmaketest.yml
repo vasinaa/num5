@@ -1,6 +1,7 @@
-name: test_new
+name: num5
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
     
