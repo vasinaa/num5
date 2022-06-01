@@ -1,0 +1,80 @@
+name: test_new
+
+on:
+  push:
+    branches: [ main ]
+    
+    
+    
+jobs:
+
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+      
+     - name: build banking
+       shell: bash
+       run: |
+        cd banking
+        cmake -H. -B_build
+        cmake --build _build
+        
+  Testing:
+    runs-on: ubuntu-latest
+    steps: 
+     - uses: actions/checkout@v2
+      
+     - name: update
+       run: |
+        git submodule update --init
+        sudo apt install lcov
+        sudo apt install g++-7
+        
+     - name : test
+       shell: bash
+       run: |
+        mkdir _build && cd _build
+        CXX=/usr/bin/g++-7 cmake -DCOVERAGE=1 ..
+        cmake --build .
+        ./RunTest
+        lcov -t "banking" -o lcov.info -c -d .
+        lcov --remove lcov.info '/home/runner/work/num5/num5/third-party/gtest/*' -o lcov.info
+        lcov --remove lcov.info '/usr/include/*' -o lcov.info
+        
+  Covtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: uppdate
+        run: |
+          git submodule update --init
+          sudo apt install lcov
+          sudo apt install g++-7
+          
+      - name: test
+        shell: bash
+        run: |
+          mkdir _build && cd_build
+          CXX=/usr/bin/g++-7 cmake -DCOVERAGE=1 ..
+          cmake --build .
+          ./RunTest
+          lcov -t "banking" -o lcov.info -c -d .
+          lcov --remove lcov.info '/hom/runner/work/num5/num5/third-party/gtest/*' -o lcov.info ###
+          lcov --remove lcov.info '/usr/include/*' -o lcov.info
+          
+     - name: CovF
+       uses: coverallsapp/github-action@master
+       with: 
+        github-token: ${{ secrets.github_token }}
+        parallel: true
+        path-to-lcov: ./_build/lcov.info
+        coveralls-endpoint: htps://coveralls.io
+        
+    - name: CovE
+      uses: coverallsapp/github-action@master
+      with: 
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
+       
+        
