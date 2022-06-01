@@ -42,7 +42,7 @@ jobs:
         lcov --remove lcov.info '/home/runner/work/num5/num5/third-party/gtest/*' -o lcov.info
         lcov --remove lcov.info '/usr/include/*' -o lcov.info
         
-  Covtest:
+  CovTest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -63,18 +63,18 @@ jobs:
           lcov --remove lcov.info '/hom/runner/work/num5/num5/third-party/gtest/*' -o lcov.info ###
           lcov --remove lcov.info '/usr/include/*' -o lcov.info
           
-     - name: CovF
-       uses: coverallsapp/github-action@master
-       with: 
-        github-token: ${{ secrets.github_token }}
-        parallel: true
-        path-to-lcov: ./_build/lcov.info
-        coveralls-endpoint: htps://coveralls.io
+      - name: CovF
+        uses: coverallsapp/github-action@master
+        with: 
+          github-token: ${{ secrets.github_token }}
+          parallel: true
+          path-to-lcov: ./_build/lcov.info
+          coveralls-endpoint: htps://coveralls.io
         
-    - name: CovE
-      uses: coverallsapp/github-action@master
-      with: 
-        github-token: ${{ secrets.github_token }}
-        parallel-finished: true
+      - name: CovE
+        uses: coverallsapp/github-action@master
+        with: 
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
        
         
